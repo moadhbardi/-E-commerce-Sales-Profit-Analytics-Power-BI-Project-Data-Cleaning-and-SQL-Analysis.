@@ -1,163 +1,221 @@
-📊 E-Commerce Sales & Profit Analytics — Power BI Project
-📌 Project Overview
+E-Commerce Revenue & Profit Analysis – Power BI Project
 
-This project analyzes an e-commerce transaction dataset to uncover trends in revenue, profitability, product performance, and customer behavior.
-It includes data cleaning, data modeling, DAX measures, and interactive Power BI dashboards designed for business decision-making.
+A complete end-to-end data analytics project using Excel, Python, Power BI, and DAX
 
-The goal is to transform messy raw data into actionable insights for sales, operations, and marketing teams.
+🚀 Project Overview
+
+This project presents a full Business Intelligence workflow built on a real-world E-commerce dataset.
+It covers everything from data collection, cleaning, feature engineering, exploratory analysis, DAX measures, and interactive dashboards.
+
+The objective is to deliver an easy-to-read and actionable Revenue & Profit Performance Dashboard for business decision-makers.
+
+🎯 Key Objectives
+
+Analyze total revenue, profit, and order performance
+
+Identify top performing brands & product lines
+
+Compare online vs offline orders
+
+Understand monthly sales trends
+
+Build interactive dashboards with drill-down & filters
+
+Demonstrate a complete BI workflow for employers
+
+📁 Dataset Information
+
+The dataset contains transaction-level E-commerce data, including:
+
+Column	Description
+order_id	Unique order identifier
+order_date	Date of purchase
+brand	Product brand
+product_line	Category (Standard, Road, Mountain…)
+list_price	Product price before discount
+disount_percent	% discount applied
+profit	Profit earned per item
+online_order	If order was made online
+order_status	Approved / Cancelled / Returned…
+
+Data was originally provided in Excel and cleaned using Python.
 
 🧹 Data Cleaning & Preparation
+✔ Excel Pre-cleaning
 
-The raw CSV dataset contained inconsistencies, missing values, unreadable date formats, and unused variables.
-I performed full preprocessing using Excel and Python, including:
+Fixed inconsistent brand names
 
-✔ Removed irrelevant columns
+Checked missing / null values
 
-Removed fields such as product_class and product_size that added no analytical value.
+Removed duplicate records
 
-✔ Renamed technical columns
+Standardized date formats
 
-Standardized column names to make the dataset easier to read (e.g., t_id → transaction_id).
+Verified discount formula consistency
 
-✔ Filtered and validated data
+🐍 Python Data Cleaning Workflow
 
-Kept only approved transactions.
+Performed using Pandas:
 
-Removed duplicated values and irrelevant entries.
+✔ Major steps
 
-Checked for missing values and cleaned the final dataset.
+Loaded the raw Excel file with pandas.read_excel()
 
-✔ Converted date formats
+Converted order_date to datetime
 
-Parsed the transaction date into proper datetime.
+Extracted Month column
 
-Extracted year, month, day, hour, minute for time-based analysis.
+Replaced incorrect product line categories
 
-✔ Exported a fully cleaned dataset
+Handled negative or impossible values in list_price
 
-Saved as CSV.
+Verified profit calculations
 
-Loaded into an SQLite database for SQL exploration and validation.
+Exported a cleaned version used in Power BI
 
-✔ SQL Exploration
+df['order_date'] = pd.to_datetime(df['order_date'])
+df['month'] = df['order_date'].dt.month_name()
+df['profit'] = df['list_price'] - df['list_price'] * df['discount_percent']
 
-I performed several SQL analyses such as:
+📐 DAX Measures Used in Power BI
 
-Top 10 customers by spending
-
-Profit margin filtering
-
-Average list price by brand
-
-Revenue distribution
-
-🧠 Data Modeling (Power BI)
-
-Inside Power BI, I built a star-schema-ready table with clean fields.
-Additional transformations included:
-
-✔ Created new calculated columns
-
-Extracted month names
-
-Created profit column:
-Profit = List Price – Standard Cost
-
-✔ Built DAX measures for analysis
-
-Main measures include:
+Below are the key DAX measures powering the dashboard:
 
 Total Revenue
+total_revenue = SUM(dataset[list_price])
 
 Total Profit
-
-Profit by Brand
-
-Profit by Product Line
+Sum of profits = SUM(dataset[profit])
 
 Monthly Revenue
+Revenue by Month = CALCULATE(
+    SUM(dataset[list_price]),
+    ALLEXCEPT(dataset, dataset[month])
+)
 
-Monthly Profit
+Online vs Offline Revenue
+Revenue Online = CALCULATE(
+    SUM(dataset[list_price]),
+    dataset[online_order] = TRUE()
+)
 
-These measures allow dynamic filtering and slicing inside the report.
+Profit Margin
+Profit Margin = DIVIDE([Sum of profits], [total_revenue])
 
-📈 Dashboard Structure
-1️⃣ Revenue KPI Dashboard
+📊 Power BI Dashboard
 
-Focuses on business performance from a revenue perspective.
+Your dashboard consists of two interactive pages:
 
-Included Visuals
+📍 Page 1 — Revenue KPI Dashboard
 
-✔ Total revenue KPI
-✔ Revenue by:
+Includes the following visuals:
 
-Online vs offline order
+Main KPI Card → Total Revenue
 
-Order status
+Donut Chart → Revenue by Online vs Offline
 
-Brand
+Donut Chart → Revenue by Order Status
 
-Product line
+Pie Chart → Revenue by Brand
 
-Month
-✔ Pie charts, donut charts, and time-series line charts
-✔ Clean background for storytelling
+Bar Chart → Revenue by Product Line
 
-2️⃣ Profit KPI Dashboard
+Line Chart → Monthly Revenue Trend
 
-Highlights financial efficiency and product profitability.
+✔ Insights
 
-Included Visuals
+Standard product line dominates revenue.
 
-✔ Total profit KPI
-✔ Profit by:
+Online orders represent ~50% of total revenue.
 
-Brand
+Best performing brands generate over 4M each.
 
-Product line
+Consistent sales peaks in July–August.
 
-Month
-✔ Donut charts, pie charts, and trend curves
-✔ Helps identify high-margin products and seasonal patterns
+📍 Page 2 — Profit KPI Dashboard
 
-🔍 Key Insights
+Includes:
 
-Some insights identified from the dashboards:
+Main KPI Card → Total Profit
 
-Standard product line generates the highest revenue and profit.
+Line Chart → Monthly Profit Trend
 
-Some brands perform extremely well in both sales volume and margins.
+Pie Chart → Profit by Brand
 
-Profitability fluctuates by month, indicating seasonal demand.
+Donut Chart → Profit by Product Line
 
-Online orders represent a strong share of total revenue, confirming digital importance.
+✔ Insights
 
-Certain products exceed 50% profit margin, making them key targets for promotion.
+Standard line drives 74% of total profit
 
-🧰 Tools & Technologies
+WearzA2B is the most profitable brand (~25%)
 
-Excel — early cleaning, inspection
+Profit seasonality similar to revenue with peaks in Q3
 
-Python (Pandas) — deep cleaning, renaming, date parsing, exporting
+🎨 Design & UX
 
-SQLite / SQL Queries — validation and exploratory analysis
+Improvements applied:
 
-Power BI — modelling, DAX, interactive dashboards
+Unified color theme
 
-DAX — calculations for KPIs and breakdowns
+Transparent card backgrounds
 
-🎯 Project Purpose
+Clean fonts & modern icons
 
-This project demonstrates my ability to:
+Minimal and centered KPI cards
 
-Clean and prepare raw business data
+Drill-down enabled on charts
 
-Build analytical data models
+Filters: Month, Brand, Product Line, Order Status
 
-Perform SQL exploration
+This makes the dashboard clean, modern, and recruiter-friendly.
 
-Create advanced KPIs using DAX
+📂 Repository Structure
+📁 ecommerce-bi-project/
+│
+├── data/
+│   ├── raw_dataset.xlsx
+│   └── cleaned_dataset.xlsx
+│
+├── python-cleaning/
+│   └── data_cleaning.ipynb
+│
+├── powerbi/
+│   └── ecommerce_dashboard.pbix
+│
+├── images/
+│   ├── revenue_dashboard.png
+│   ├── profit_dashboard.png
+│   └── sample_visuals.png
+│
+└── README.md   ← (this file)
 
-Design professional Power BI dashboards
+🧪 How to Reproduce
 
-Extract insights that support real-world business decisions
+1️⃣ Clone this repository
+
+git clone https://github.com/USERNAME/ecommerce-bi-project.git
+
+
+2️⃣ Install Python requirements
+
+pip install pandas numpy matplotlib
+
+
+3️⃣ Open the Power BI file
+
+powerbi/ecommerce_dashboard.pbix
+
+
+4️⃣ Connect it to cleaned_dataset.xlsx
+
+
+This project demonstrates:
+
+✔ Data cleaning (Excel + Python)
+✔ ETL pipeline understanding
+✔ DAX proficiency
+✔ KPI design thinking
+✔ Business storytelling
+✔ Dashboard UX & layout
+✔ End-to-end BI execution
